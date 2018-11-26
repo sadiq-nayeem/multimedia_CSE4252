@@ -1,0 +1,75 @@
+clear;
+clc;
+
+% input_file = 'text_input.txt';
+% frequency_file = 'F:\Users\cse\Desktop\new\text_frequency.txt';
+% output_file = 'F:\Users\cse\Desktop\new\text_output.txt';
+
+input_file = 'text_input.txt';
+frequency_file = 'text_frequency.txt';
+output_file = 'text_output.txt';
+
+% Input The text file
+
+fileID = fopen(input_file, 'r');
+formatSpec = '%c';
+fl = fscanf(fileID, formatSpec);
+
+fclose(fileID);
+
+
+[x, r] = size(fl);
+fileID = fopen(frequency_file, 'w');
+
+x = 0;			% Frequency of a Character
+y = '_*_*_';	% The character whose frequency will be counted
+for j = 1:r
+    if j == 1			% For the first character initialization of 'y'
+        y = fl(j);
+        x = 0;
+    end
+    if(y == fl(j) )		% For match case of character
+        x = x + 1;
+    end
+    if(y ~= fl(j))		% Changes y when character sequence has been changed
+        
+        if(y ~= '_*_*_')
+            fprintf(fileID, '%c%d\n', y, x);
+        end
+        y = fl(j);
+        x = 1;
+    end
+    if j == r 		% For the last character sequcne of the text file
+        fprintf(fileID, '%c%d\n', y, x);
+    end
+    
+end
+fclose(fileID);
+            
+                
+fileID = fopen(frequency_file, 'r');
+formatSpec = '%c%d%*c';
+
+rex = fscanf(fileID, formatSpec);
+fclose(fileID);
+
+k = 1;				% Intialize first value of rex
+j = 1;				% Initialize first position value for the output text
+[ f sx] = size(fl);
+while j <= r
+    nimg(j:j+rex(k+1)-1) = rex(k);
+    j = j + rex(k+1);
+    k = k + 2;
+    %if k >= sx
+    %    k = k -2;
+    %end
+end
+
+fileID = fopen(output_file, 'w');
+formatSpec = '%c';
+
+for i = 1:r
+    fprintf(fileID, formatSpec, nimg(i));
+end
+
+fclose(fileID);
